@@ -2,11 +2,12 @@
 Pipeline for processing scraped Edgar documents
 
 # Dependencies:
-cusiputils package
+cusiputils 
 
 # Instructions:
-python process.py <path items to process>
-eg:
+python process.py path
+
+# Example:
 python process items.jl
 
-Input must be a file in which each line is a JSON object.
+Note: Input must be a file in which each line is a JSON object.
