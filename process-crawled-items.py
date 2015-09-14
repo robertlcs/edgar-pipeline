@@ -6,7 +6,7 @@ from cleaning import clean_item
 from validation import validate_item
 
 def usage():
-    print "Usage: python process.py <path-to-file>"
+    print "Usage: python process-crawled-items.py <path-to-file>"
 
 def gen_clean_items(items):
     for item in items:

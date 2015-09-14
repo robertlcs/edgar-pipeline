@@ -2,7 +2,7 @@
 Pipeline for processing scraped Edgar documents
 
 # Dependencies:
-cusiputils 
+cusiputils
 
 # Instructions:
 python process.py path

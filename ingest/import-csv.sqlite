@@ -1,0 +1,5 @@
+.read create.sql
+.mode csv
+
+.import valid-items.csv items
+.import
