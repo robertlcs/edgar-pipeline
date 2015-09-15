@@ -2,4 +2,4 @@
 .mode csv
 
 .import valid-items.csv items
-.import
+.import sp500_companies.csv sp500_companies

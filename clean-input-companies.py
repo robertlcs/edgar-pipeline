@@ -13,6 +13,23 @@ def clean(line):
     if m:
         cleaned_line = m.group(1)
 
+    m = re.match(r'(.*)&*\s*COMPANY$', cleaned_line)
+    if m and m.group(1):
+        cleaned_line = m.group(1)
+
+    m = re.match(r'(.*) INCORPORATED$', cleaned_line)
+    if m:
+        cleaned_line = m.group(1) + " INC"
+
+    m = re.match(r'(.*) & CO\.(.*)$', cleaned_line)
+    if m:
+        cleaned_line = m.group(1) + m.group(2)
+
+    cleaned_line = cleaned_line.replace('-', ' ')
+    cleaned_line = cleaned_line.replace('&', ' AND ')
+    cleaned_line = cleaned_line.replace('.', ' ')
+
+    cleaned_line = re.sub('\s+', ' ', cleaned_line).strip()
     return cleaned_line
 
 for line in sys.stdin:
