@@ -4,7 +4,14 @@ import sys
 def usage():
     print "Usage: python clean-input-companies.py"
 
-def clean(line):
+def clean(line, index):
+    if index == 0:
+        return line.strip()
+
+    m = re.match(r'"(.*)"', line)
+    if m:
+        line = m.group(1)
+
     cleaned_line = line.upper().strip()
     if re.search(r'CORPORATION', line, re.IGNORECASE):
         cleaned_line = cleaned_line.replace('CORPORATION', 'CORP')
@@ -30,9 +37,10 @@ def clean(line):
     cleaned_line = cleaned_line.replace('.', ' ')
 
     cleaned_line = re.sub('\s+', ' ', cleaned_line).strip()
-    return cleaned_line
+    return "\"%s\"" % cleaned_line
 
+index = 0
 for line in sys.stdin:
-
-    print clean(line)
+    print clean(line, index)
+    index += 1
 
