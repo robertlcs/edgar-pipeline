@@ -1,46 +1,33 @@
+import csv
 import re
 import sys
+from cleaning import clean_issuer_name
 
 def usage():
-    print "Usage: python clean-input-companies.py"
+    print "Usage: python clean-input-companies.py <file> <column=company_name>"
 
-def clean(line, index):
-    if index == 0:
-        return line.strip()
+if len(sys.argv) < 2:
+    usage()
+    sys.exit(-1)
 
-    m = re.match(r'"(.*)"', line)
-    if m:
-        line = m.group(1)
+path = sys.argv[1]
+if len(sys.argv) > 2:
+    column = sys.argv[2]
+else:
+    column = "COMPANY"
 
-    cleaned_line = line.upper().strip()
-    if re.search(r'CORPORATION', line, re.IGNORECASE):
-        cleaned_line = cleaned_line.replace('CORPORATION', 'CORP')
+with open(path, "r") as input_csv:
+    reader = csv.reader(input_csv)
+    headers = reader.next()
 
-    m = re.match(r'(.*) CLASS [A-Z]$', cleaned_line)
-    if m:
-        cleaned_line = m.group(1)
+with open(path, "r") as input_csv:
+    reader = csv.DictReader(input_csv)
+    writer = csv.DictWriter(sys.stdout, headers, quoting=csv.QUOTE_NONNUMERIC)
+    writer.writeheader()
+    for row in reader:
+        company_name = clean_issuer_name(row[column])
+        row[column] = company_name
+        writer.writerow(row)
 
-    m = re.match(r'(.*)&*\s*COMPANY$', cleaned_line)
-    if m and m.group(1):
-        cleaned_line = m.group(1)
 
-    m = re.match(r'(.*) INCORPORATED$', cleaned_line)
-    if m:
-        cleaned_line = m.group(1) + " INC"
-
-    m = re.match(r'(.*) & CO\.(.*)$', cleaned_line)
-    if m:
-        cleaned_line = m.group(1) + m.group(2)
-
-    cleaned_line = cleaned_line.replace('-', ' ')
-    cleaned_line = cleaned_line.replace('&', ' AND ')
-    cleaned_line = cleaned_line.replace('.', ' ')
-
-    cleaned_line = re.sub('\s+', ' ', cleaned_line).strip()
-    return "\"%s\"" % cleaned_line
-
-index = 0
-for line in sys.stdin:
-    print clean(line, index)
-    index += 1
 

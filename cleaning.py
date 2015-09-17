@@ -1,5 +1,37 @@
 import re
 
+def clean_issuer_name(issue_name):
+    m = re.match(r'"(.*)"', issue_name)
+    if m:
+        issue_name = m.group(1)
+
+    cleaned_issuer_name = issue_name.upper().strip()
+    if re.search(r'CORPORATION', issue_name, re.IGNORECASE):
+        cleaned_issuer_name = cleaned_issuer_name.replace('CORPORATION', 'CORP')
+
+    m = re.match(r'(.*) CLASS [A-Z]$', cleaned_issuer_name)
+    if m:
+        cleaned_issuer_name = m.group(1)
+
+    m = re.match(r'(.*)&*\s*COMPANY$', cleaned_issuer_name)
+    if m and m.group(1):
+        cleaned_issuer_name = m.group(1)
+
+    m = re.match(r'(.*) INCORPORATED$', cleaned_issuer_name)
+    if m:
+        cleaned_issuer_name = m.group(1) + " INC"
+
+    m = re.match(r'(.*) & CO\.(.*)$', cleaned_issuer_name)
+    if m:
+        cleaned_issuer_name = m.group(1) + m.group(2)
+
+    cleaned_issuer_name = cleaned_issuer_name.replace('-', ' ')
+    cleaned_issuer_name = cleaned_issuer_name.replace('&', ' ')
+    cleaned_issuer_name = cleaned_issuer_name.replace('.', ' ')
+
+    cleaned_issuer_name = re.sub('\s+', ' ', cleaned_issuer_name).strip()
+    return cleaned_issuer_name
+
 def clean_item(item):
 
     address = item.get('address')
@@ -15,6 +47,14 @@ def clean_item(item):
             cleaned_cusips.append(cusip)
 
         item['cusip'] = "; ".join(cleaned_cusips)
+
+    # Clean issuer name
+    if item.get('issuer_name'):
+        item['issuer_name'] = clean_issuer_name(item['issuer_name'])
+
+    # Issue name
+    if not item.get('issue_name'):
+        item['issue_name'] = 'Notes' # For now, default to "Notes." Might want to make this more intelligent.
 
 def clean_address(address):
     address = address.strip()

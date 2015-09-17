@@ -4,6 +4,7 @@ import sys
 
 from cleaning import clean_item
 from validation import validate_item
+from ingest import ingest
 
 def usage():
     print "Usage: python process-crawled-items.py <path-to-file>"
@@ -118,7 +119,7 @@ with open("valid-items.csv", "w") as valid_items_csv:
         del item['score']
         valid_items_writer.writerow(item)
 
-
+ingest()
 
 
 
