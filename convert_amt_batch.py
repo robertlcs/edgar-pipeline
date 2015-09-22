@@ -11,7 +11,7 @@ if len(sys.argv) < 2:
 path = sys.argv[1]
 
 fields = ['cusip', 'url', 'document_name', 'issuer_name', 'issue_name', 'address']
-with open(path, "r") as source_csv:
+with open(path, "rU") as source_csv:
     reader = csv.DictReader(source_csv)
     writer = csv.DictWriter(sys.stdout, fields)
     #writer.writeheader()

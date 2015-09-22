@@ -62,8 +62,27 @@ with open("metrics.csv", "w") as output_csv:
         'Num Rejected' : rejected_count,
         'Num Duplicates' : duplicate_count,
         'Percent (%) Accepted' : percent_accepted }
-    pretty_print_row(row)
+
+    print "----- Crawl results -----"
+    print "# items crawled: %s" % total_count
+    print "# items valid: %s" % valid_count
+    print "# items rejected: %s" % rejected_count
+    print "# items duplicates: %s" % duplicate_count
+    print "Percentage accepted (valid): %s" % percent_accepted
+    print
+
+    print "------------ Stocks and Bonds ------------"
+    print "Number of common stocks: %s" % num_common_stocks
+    print "Number of issues (CUSIP's): %s" % cusip_count
+    print
+
+    print "---------- S&P 500 Index -----------"
+    print "# of common stocks for SP500: %s" % num_common_stocks_for_sp500_companies
+    print "# of companies in index: %s" % sp500_count
+    print "Percentage of S&P 500 common stocks found/accepted: %s" % percent_sp500_with_common_stocks
+
     writer.writerow(row)
+
 
 
 

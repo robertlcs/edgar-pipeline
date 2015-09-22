@@ -85,13 +85,3 @@ with lite.connect('ingest.db') as con:
                 writer.writerow(output_row)
         else:
             print "No results."
-
-# Join with rejected items to get Date
-#cmd = "echo -e '" \
-#      ".mode csv\\n" \
-#      ".output amt_batch_items.csv\\n" \
-#      "select a.cusip, a.url, a.address, a.issuer_name, a.issue_name, a.document_name, b.date " \
-#      "from amt_batch_items as a, rejected_items as b where a.url = b.url;'"
-#cmd += "cmd | sqlite3 ingest.db"
-#execute_command(cmd)
-
