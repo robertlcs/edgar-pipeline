@@ -1,0 +1,1 @@
+.import sp500_companies_cleaned.csv sp500_companies

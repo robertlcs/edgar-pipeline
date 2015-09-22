@@ -1,18 +1,22 @@
+import argparse
+
 import csv
 import json
+import re
 import sys
 
 from cleaning import clean_item
 from validation import validate_item
 from ingest import ingest
 
-def usage():
-    print "Usage: python process-crawled-items.py <path-to-file>"
-
 def gen_clean_items(items):
     for item in items:
         clean_item(item)
         yield item
+
+def gen_items_from_csv(csv_input):
+    reader = csv.DictReader(csv_input)
+    return [row for row in reader]
 
 def gen_validated_items(items):
     for item in items:
@@ -51,13 +55,16 @@ def gen_scored_items(items):
 # the rejected, duplicate and valid items.
 # For now, just iterate over the items and separate into categories (validated, duplicate, rejected).
 def process_generated_items(items):
+    print "Processing items..."
     duplicate_items = []
     rejected_items = []
 
     # Keep track of cusip's we've seen before
     cusip_to_items = dict()
+    item_count = 0
     for item in items:
-        print item
+        item_count += 1
+        #print item
         if not item['is_valid']:
             rejected_items.append(item)
             continue
@@ -68,22 +75,41 @@ def process_generated_items(items):
         elif item['score'] > seen_item['score']:
             cusip_to_items[item['cusip']] = item
             duplicate_items.append(seen_item)
+        else:
+            duplicate_items.append(item)
 
+    print "Processed %d items." % item_count
     validated_items = cusip_to_items.values()
+    print "%d duplicate items" % len(duplicate_items)
+    print "%d rejected items" % len(rejected_items)
+    print "%d validated items" % len(validated_items)
+
     return {'duplicate_items' : duplicate_items,
             'rejected_items' : rejected_items,
             'validated_items' : validated_items}
 
-if len(sys.argv) < 2:
-    usage()
-    sys.exit(-1)
-
-path = sys.argv[1]
+parser = argparse.ArgumentParser(description='Process crawled items.')
+parser.add_argument("path", help="Path to crawl output")
+parser.add_argument("-i",
+                    "--incremental",
+                    action="store_true",
+                    help="this is an incremental ingest, so don't drop/create the database.")
+args = parser.parse_args()
 
 # Steps: Clean, validate, expand rows, score, de-dupe
 
-f = open(path, "r")
-items = (json.loads(line) for line in f)
+print "Opening " + args.path
+f = open(args.path, "r")
+
+if re.match(".*\.jl$", args.path):
+    items = (json.loads(line) for line in f)
+elif re.match(".*\.csv$", args.path):
+    items = gen_items_from_csv(f)
+    print "%d items " % len(items)
+else:
+    print "Input file must be in csv (.csv) or json lines (.jl) format."
+    sys.exit(-1)
+
 cleaned_items = gen_clean_items(items)
 validated_items = gen_validated_items(cleaned_items)
 expanded_items = gen_rows_from_items_with_multiple_cusips(validated_items)
@@ -93,33 +119,38 @@ processed_items = process_generated_items(scored_items)
 fields = ['cusip', 'url', 'address', 'issue_name', 'issuer_name', 'document_name', 'date']
 
 # Write out rejects:
+print "Writing rejected items..."
 with open("rejected-items.csv", "w") as rejected_items_csv:
     rejected_items_writer = csv.DictWriter(rejected_items_csv, fields + ['is_valid', 'validation_reason'])
-    rejected_items_writer.writeheader()
+    #rejected_items_writer.writeheader()
     for item in processed_items['rejected_items']:
         del item['score'] # Score is meaningless for invalid records
         rejected_items_writer.writerow(item)
 
 # Write out duplicates:
+print "Writing duplicate items..."
 with open("duplicate-items.csv", "w") as duplicate_items_csv:
     duplicate_items_writer = csv.DictWriter(duplicate_items_csv, fields + ['score'])
-    duplicate_items_writer.writeheader()
+    #duplicate_items_writer.writeheader()
     for item in processed_items['duplicate_items']:
         del item['is_valid']
         del item['validation_reason']
         duplicate_items_writer.writerow(item)
 
 # Write out valid items:
+print "Writing valid items..."
 with open("valid-items.csv", "w") as valid_items_csv:
     valid_items_writer = csv.DictWriter(valid_items_csv, fields)
-    valid_items_writer.writeheader()
+    #valid_items_writer.writeheader()
     for item in processed_items['validated_items']:
         del item['is_valid']
         del item['validation_reason']
         del item['score']
         valid_items_writer.writerow(item)
 
-ingest()
+# Make this incremental - only create new tables if first time:
+
+ingest(args.incremental)
 
 
 

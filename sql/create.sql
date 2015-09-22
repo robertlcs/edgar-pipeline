@@ -31,6 +31,15 @@ CREATE TABLE duplicate_items (
     score INTEGER
 );
 
+CREATE TABLE amt_batch_items (
+    cusip TEXT NOT NULL,
+    url TEXT NOT NULL,
+    document_name TEXT NOT NULL,
+    issuer_name TEXT,
+    issue_name TEXT,
+    address TEXT
+);
+
 create table sp500_companies (
     company VARCHAR NOT NULL
 );

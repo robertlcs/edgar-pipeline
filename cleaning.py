@@ -32,21 +32,30 @@ def clean_issuer_name(issue_name):
     cleaned_issuer_name = re.sub('\s+', ' ', cleaned_issuer_name).strip()
     return cleaned_issuer_name
 
+
+def clean_cusips(item):
+    if item.get('cusip'):
+        cusips = item['cusip']
+        cusips = cusips.replace(",", ";")
+        cusips = cusips.split(";")
+        cleaned_cusips = []
+        for cusip in cusips:
+            cusip = cusip.replace("-", "")
+            cusip = cusip.replace(" ", "")
+            cusip = cusip.replace("#", "")
+            cleaned_cusips.append(cusip)
+
+        item['cusip'] = "; ".join(cleaned_cusips)
+
+    return cleaned_cusips
+
 def clean_item(item):
 
     address = item.get('address')
     if address:
         item['address'] = clean_address(address)
 
-    # Clean cusip #'s
-    if item.get('cusip'):
-        cusips = item['cusip'].split(";")
-        cleaned_cusips = []
-        for cusip in cusips:
-            cusip = cusip.replace(" ", "")
-            cleaned_cusips.append(cusip)
-
-        item['cusip'] = "; ".join(cleaned_cusips)
+    cusips = clean_cusips(item)
 
     # Clean issuer name
     if item.get('issuer_name'):
