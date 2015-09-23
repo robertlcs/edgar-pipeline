@@ -1,6 +1,21 @@
+import argparse
+
 from subprocess import call, Popen, PIPE, STDOUT
 import csv
 import sqlite3 as lite
+
+# See: http://stackoverflow.com/a/26193552/479490
+
+def emit_unicode_string(value):
+    try:
+        return unicode(value, 'utf-8')
+    except UnicodeDecodeError:
+        return unicode(value, 'iso-8859-1')
+
+def unicode_csv_reader(csv_file, dialect=csv.excel, **kwargs):
+    csv_reader = csv.DictReader(csv_file, dialect=dialect, **kwargs)
+    for row in csv_reader:
+        yield {key: emit_unicode_string(row[key]) for key in row.keys()}
 
 def ingest(incremental=False):
     if not incremental:
@@ -36,10 +51,10 @@ def ingest(incremental=False):
         con.execute(stmt)
 
         with open("valid-items.csv", "r") as valid_items_csv:
-            reader = csv.DictReader(valid_items_csv)
+            reader = unicode_csv_reader(valid_items_csv)
             for row in reader:
-                stmt = 'INSERT INTO tmp_valid_items VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-                con.execute(stmt, (row['cusip'], row['url'], row['address'], row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['score']))
+                stmt = '''INSERT INTO tmp_valid_items (cusip, url, address, issue_name, issuer_name, document_name, date, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
+                con.execute(stmt, (row['cusip'], row['url'], row['address'], row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['score'],))
 
         stmt = "INSERT INTO valid_items(cusip, url, address, issue_name, issuer_name, document_name, date, score) SELECT cusip, url, address, issue_name, issuer_name, document_name, date, score FROM tmp_valid_items"
         con.execute(stmt)
@@ -57,8 +72,8 @@ def ingest(incremental=False):
            validation_reason VARCHAR)'''
         con.execute(stmt)
 
-        with open("rejected-items.csv", "r") as valid_items_csv:
-            reader = csv.DictReader(valid_items_csv)
+        with open("rejected-items.csv", "r") as rejected_items_csv:
+            reader = unicode_csv_reader(rejected_items_csv)
             for row in reader:
                 stmt = 'INSERT INTO tmp_rejected_items VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
                 con.execute(stmt, (row['cusip'], row['url'], row['address'], row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['validation_reason']))
@@ -80,7 +95,7 @@ def ingest(incremental=False):
         con.execute(stmt)
 
         with open("duplicate-items.csv", "r") as duplicate_items_csv:
-            reader = csv.DictReader(duplicate_items_csv)
+            reader = unicode_csv_reader(duplicate_items_csv)
             for row in reader:
                 stmt = 'INSERT INTO tmp_duplicate_items VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
                 con.execute(stmt, (row['cusip'], row['url'], row['address'], row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['score']))
@@ -101,5 +116,12 @@ def ingest(incremental=False):
 #    print err_output
 
 if __name__ == "__main__":
-    ingest()
+    parser = argparse.ArgumentParser(description='Process crawled items.')
+    parser.add_argument("-i",
+                    "--incremental",
+                    action="store_true",
+                    help="this is an incremental ingest, so don't drop/create the database.")
+    args = parser.parse_args()
+
+    ingest(args.incremental)
 
