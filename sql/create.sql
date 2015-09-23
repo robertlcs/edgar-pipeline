@@ -1,14 +1,5 @@
 CREATE TABLE valid_items (
-    cusip VARCHAR NOT NULL,
-    url VARCHAR NOT NULL,
-    address VARCHAR,
-    issue_name VARCHAR,
-    issuer_name VARCHAR,
-    document_name VARCHAR,
-    date DATE
-);
-
-CREATE TABLE rejected_items (
+    id INTEGER PRIMARY KEY ASC,
     cusip VARCHAR NOT NULL,
     url VARCHAR NOT NULL,
     address VARCHAR,
@@ -16,11 +7,23 @@ CREATE TABLE rejected_items (
     issuer_name VARCHAR,
     document_name VARCHAR,
     date DATE,
-    is_valid VARCHAR,
+    score NUMERIC NOT NULL DEFAULT 0
+);
+
+CREATE TABLE rejected_items (
+    id INTEGER PRIMARY KEY ASC,
+    cusip VARCHAR NOT NULL,
+    url VARCHAR NOT NULL,
+    address VARCHAR,
+    issue_name VARCHAR,
+    issuer_name VARCHAR,
+    document_name VARCHAR,
+    date DATE,
     validation_reason VARCHAR
 );
 
 CREATE TABLE duplicate_items (
+    id INTEGER PRIMARY KEY ASC,
     cusip VARCHAR NOT NULL,
     url VARCHAR NOT NULL,
     address VARCHAR,
@@ -28,7 +31,7 @@ CREATE TABLE duplicate_items (
     issuer_name VARCHAR,
     document_name VARCHAR,
     date DATE,
-    score INTEGER
+    score NUMERIC NOT NULL DEFAULT 0
 );
 
 CREATE TABLE amt_batch_items (

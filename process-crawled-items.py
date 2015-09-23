@@ -122,7 +122,7 @@ fields = ['cusip', 'url', 'address', 'issue_name', 'issuer_name', 'document_name
 print "Writing rejected items..."
 with open("rejected-items.csv", "w") as rejected_items_csv:
     rejected_items_writer = csv.DictWriter(rejected_items_csv, fields + ['is_valid', 'validation_reason'])
-    #rejected_items_writer.writeheader()
+    rejected_items_writer.writeheader()
     for item in processed_items['rejected_items']:
         del item['score'] # Score is meaningless for invalid records
         rejected_items_writer.writerow(item)
@@ -131,7 +131,7 @@ with open("rejected-items.csv", "w") as rejected_items_csv:
 print "Writing duplicate items..."
 with open("duplicate-items.csv", "w") as duplicate_items_csv:
     duplicate_items_writer = csv.DictWriter(duplicate_items_csv, fields + ['score'])
-    #duplicate_items_writer.writeheader()
+    duplicate_items_writer.writeheader()
     for item in processed_items['duplicate_items']:
         del item['is_valid']
         del item['validation_reason']
@@ -140,17 +140,16 @@ with open("duplicate-items.csv", "w") as duplicate_items_csv:
 # Write out valid items:
 print "Writing valid items..."
 with open("valid-items.csv", "w") as valid_items_csv:
-    valid_items_writer = csv.DictWriter(valid_items_csv, fields)
-    #valid_items_writer.writeheader()
+    valid_items_writer = csv.DictWriter(valid_items_csv, fields + ['score'])
+    valid_items_writer.writeheader()
     for item in processed_items['validated_items']:
         del item['is_valid']
         del item['validation_reason']
-        del item['score']
         valid_items_writer.writerow(item)
 
 # Make this incremental - only create new tables if first time:
 
-ingest(args.incremental)
+#ingest(args.incremental)
 
 
 

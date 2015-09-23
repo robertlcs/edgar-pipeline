@@ -25,4 +25,4 @@ The commands:
 
 python process-crawled-items.py ca6b4be65c7711e5a6c502312cb755f7.jl
 python process-amt-batch.py Batch_2093436_batch_results.csv Batch_2093566_batch_results.csv
-python process-crawled-items.py -i amt_batch_results.csv
+python process-crawled-items.py -i amt_batch_items.csv
