@@ -3,6 +3,7 @@ import argparse
 from subprocess import call, Popen, PIPE, STDOUT
 import csv
 import sqlite3 as lite
+import os
 
 # See: http://stackoverflow.com/a/26193552/479490
 
@@ -17,7 +18,7 @@ def unicode_csv_reader(csv_file, dialect=csv.excel, **kwargs):
     for row in csv_reader:
         yield {key: emit_unicode_string(row[key]) for key in row.keys()}
 
-def ingest(incremental=False):
+def ingest(path, incremental=False):
     if not incremental:
         cmd = "cat sql/create.sql | sqlite3 ingest.db"
         ps = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
@@ -31,14 +32,12 @@ def ingest(incremental=False):
         print output
         print err_output
 
-
-    # I think we have to create temporary staging tables in order to
-    # generate the autoincrement key
-
     con = lite.connect("ingest.db")
     with con:
 
         # Valid items
+        con.execute("DROP TABLE IF EXISTS tmp_valid_items")
+
         stmt = '''CREATE TABLE tmp_valid_items (
            cusip VARCHAR NOT NULL,
            url VARCHAR NOT NULL,
@@ -50,7 +49,7 @@ def ingest(incremental=False):
            score NUMERIC NOT NULL)'''
         con.execute(stmt)
 
-        with open("valid-items.csv", "r") as valid_items_csv:
+        with open(os.path.join(path, "valid-items.csv"), "r") as valid_items_csv:
             reader = unicode_csv_reader(valid_items_csv)
             for row in reader:
                 stmt = '''INSERT INTO tmp_valid_items (cusip, url, address, issue_name, issuer_name, document_name, date, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
@@ -61,6 +60,8 @@ def ingest(incremental=False):
         con.execute("DROP TABLE tmp_valid_items")
 
         # Rejected items
+        con.execute("DROP TABLE IF EXISTS tmp_rejected_items")
+
         stmt = '''CREATE TABLE tmp_rejected_items (
            cusip VARCHAR NOT NULL,
            url VARCHAR NOT NULL,
@@ -72,7 +73,7 @@ def ingest(incremental=False):
            validation_reason VARCHAR)'''
         con.execute(stmt)
 
-        with open("rejected-items.csv", "r") as rejected_items_csv:
+        with open(os.path.join(path, "rejected-items.csv"), "r") as rejected_items_csv:
             reader = unicode_csv_reader(rejected_items_csv)
             for row in reader:
                 stmt = 'INSERT INTO tmp_rejected_items VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
@@ -94,7 +95,7 @@ def ingest(incremental=False):
            score NUMERIC NOT NULL)'''
         con.execute(stmt)
 
-        with open("duplicate-items.csv", "r") as duplicate_items_csv:
+        with open(os.path.join("duplicate-items.csv"), "r") as duplicate_items_csv:
             reader = unicode_csv_reader(duplicate_items_csv)
             for row in reader:
                 stmt = 'INSERT INTO tmp_duplicate_items VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
@@ -121,7 +122,9 @@ if __name__ == "__main__":
                     "--incremental",
                     action="store_true",
                     help="this is an incremental ingest, so don't drop/create the database.")
+    parser.add_argument("path",
+                        help="path to processed files (directory)")
     args = parser.parse_args()
 
-    ingest(args.incremental)
+    ingest(args.path, args.incremental)
 

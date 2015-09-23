@@ -4,6 +4,7 @@ import csv
 import json
 import re
 import sys
+import os
 
 from cleaning import clean_item
 from validation import validate_item
@@ -90,10 +91,6 @@ def process_generated_items(items):
 
 parser = argparse.ArgumentParser(description='Process crawled items.')
 parser.add_argument("path", help="Path to crawl output")
-parser.add_argument("-i",
-                    "--incremental",
-                    action="store_true",
-                    help="this is an incremental ingest, so don't drop/create the database.")
 args = parser.parse_args()
 
 # Steps: Clean, validate, expand rows, score, de-dupe
@@ -118,9 +115,14 @@ processed_items = process_generated_items(scored_items)
 
 fields = ['cusip', 'url', 'address', 'issue_name', 'issuer_name', 'document_name', 'date']
 
+# Create processed directory for staging processed files
+dirname = os.path.splitext(args.path)[0] + "-processed"
+if not os.path.exists(dirname):
+    os.mkdir(dirname)
+
 # Write out rejects:
 print "Writing rejected items..."
-with open("rejected-items.csv", "w") as rejected_items_csv:
+with open(os.path.join(dirname, "rejected-items.csv"), "w") as rejected_items_csv:
     rejected_items_writer = csv.DictWriter(rejected_items_csv, fields + ['is_valid', 'validation_reason'])
     rejected_items_writer.writeheader()
     for item in processed_items['rejected_items']:
@@ -129,7 +131,7 @@ with open("rejected-items.csv", "w") as rejected_items_csv:
 
 # Write out duplicates:
 print "Writing duplicate items..."
-with open("duplicate-items.csv", "w") as duplicate_items_csv:
+with open(os.path.join(dirname, "duplicate-items.csv"), "w") as duplicate_items_csv:
     duplicate_items_writer = csv.DictWriter(duplicate_items_csv, fields + ['score'])
     duplicate_items_writer.writeheader()
     for item in processed_items['duplicate_items']:
@@ -139,7 +141,7 @@ with open("duplicate-items.csv", "w") as duplicate_items_csv:
 
 # Write out valid items:
 print "Writing valid items..."
-with open("valid-items.csv", "w") as valid_items_csv:
+with open(os.path.join(dirname, "valid-items.csv"), "w") as valid_items_csv:
     valid_items_writer = csv.DictWriter(valid_items_csv, fields + ['score'])
     valid_items_writer.writeheader()
     for item in processed_items['validated_items']:
@@ -147,9 +149,7 @@ with open("valid-items.csv", "w") as valid_items_csv:
         del item['validation_reason']
         valid_items_writer.writerow(item)
 
-# Make this incremental - only create new tables if first time:
-
-#ingest(args.incremental)
+print "Output is in %s" % dirname
 
 
 
