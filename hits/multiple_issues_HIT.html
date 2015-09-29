@@ -1,0 +1,114 @@
+<!-- Bootstrap v3.0.3 -->
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<section class="container" id="DataCollection" style="margin-bottom:15px; padding: 10px 10px; font-family: Verdana, Geneva, sans-serif; color:#333333; font-size:0.9em;">
+<div class="row col-xs-12 col-md-12"><!-- Instructions -->
+<div class="panel panel-primary">
+<p class="panel-heading"><strong>Instructions</strong></p>
+
+<div class="panel-body">
+<p>Find the following details about this company&#39;s filing:</p>
+
+<ul>
+	<li><strong>Issuer Name</strong></li>
+	<li><strong>CUSIP numbers</strong>. CUSIP #&#39;s are 9-digit alphanumeric strings, such as &quot;43707102&quot;, or &quot;01741R AF9&quot; (sometimes they appear as a 6-digit string followed by a space and a three-digit string). A document can contain multiple CUSIP #&#39;s. For example,&nbsp;<a href="http://www.sec.gov/Archives/edgar/data/354950/000119312515204339/d934628dfwp.htm">http://www.sec.gov/Archives/edgar/data/354950/000119312515204339/d934628dfwp.htm</a>&nbsp;describes <strong>two</strong> &quot;Notes&quot; issues, each of which has a CUSIP #.&nbsp;Please enter the numbers in the form&nbsp;</li>
+	<li><strong>Issue Names</strong>. Each filing describes one or more issues. The issue name might be called &quot;Title or Class of Securities.&quot;&nbsp;This document example shows multiple &quot;Notes&quot;:&nbsp;<a href="http://www.sec.gov/Archives/edgar/data/354950/000119312515204339/d934628dfwp.htm">http://www.sec.gov/Archives/edgar/data/354950/000119312515204339/d934628dfwp.htm</a>. For this example, the issue names would be:
+	<ul>
+		<li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: small; line-height: normal; text-align: -webkit-center; widows: 1;">$1,250,000,000 2.625% Senior Notes due 2022 </b></li>
+		<li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: small; line-height: normal; text-align: -webkit-center; widows: 1;">$1,250,000,000 4.250% Senior Notes due 2046</b></li>
+	</ul>
+	Please enter issue names in the form below.&nbsp;Some issue names might not contain a monetary (dollar) amount. For example: &quot;2.5% Notes due 2017&quot;, or &quot;Senior Notes due 2018&quot;.</li>
+</ul>
+
+<p>&nbsp;</p>
+</div>
+</div>
+
+<div><label>Company Filing:</label> <a href="${url}">${document_name}</a>
+
+<p>&nbsp;</p>
+
+<table>
+	<tbody>
+		<tr>
+			<td><label>Issuer Name:</label></td>
+			<td><input class="form-control" id="issuer_name" name="issuer_name" type="text" /></td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2"><label>Issue #1</label></td>
+		</tr>
+		<tr>
+			<td><label>Name:</label></td>
+			<td><input class="form-control" id="issue_name_1" name="issue_name_1" type="text" /></td>
+		</tr>
+		<tr>
+			<td><label>CUSIP #:</label></td>
+			<td><input class="form-control" id="cusip_number_1" name="cusip_number_1" type="text" /></td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2"><label>Issue #2</label></td>
+		</tr>
+		<tr>
+			<td><label>Name:</label></td>
+			<td><input class="form-control" id="issue_name_2" name="issue_name_2" type="text" /></td>
+		</tr>
+		<tr>
+			<td><label>CUSIP #:</label></td>
+			<td><input class="form-control" id="cusip_number_2" name="cusip_number_2" type="text" /></td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2"><label>Issue #3</label></td>
+		</tr>
+		<tr>
+			<td><label>Name:</label></td>
+			<td><input class="form-control" id="issue_name_3" name="issue_name_3" type="text" /></td>
+		</tr>
+		<tr>
+			<td><label>CUSIP #:</label></td>
+			<td><input class="form-control" id="cusip_number_3" name="cusip_number_3" type="text" /></td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2"><label>Issue #4</label></td>
+		</tr>
+		<tr>
+			<td><label>Name:</label></td>
+			<td><input class="form-control" id="issue_name_4" name="issue_name_4" type="text" /></td>
+		</tr>
+		<tr>
+			<td><label>CUSIP #:</label></td>
+			<td><input class="form-control" id="cusip_number_4" name="cusip_number_4" type="text" /></td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2"><label>Issue #5</label></td>
+		</tr>
+		<tr>
+			<td><label>Name:</label></td>
+			<td><input class="form-control" id="issue_name_5" name="issue_name_5" type="text" /></td>
+		</tr>
+		<tr>
+			<td><label>CUSIP #:</label></td>
+			<td><input class="form-control" id="cusip_number_5" name="cusip_number_5" type="text" /></td>
+		</tr>
+		<tr>
+			<td align="center" colspan="2"><label>Issue #6</label></td>
+		</tr>
+		<tr>
+			<td><label>Name:</label></td>
+			<td><input class="form-control" id="issue_name_6" name="issue_name_6" type="text" /></td>
+		</tr>
+		<tr>
+			<td><label>CUSIP #:</label></td>
+			<td><input class="form-control" id="cusip_number_6" name="cusip_number_6" type="text" /></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+</div>
+</div>
+</section>
+<!-- close container -->
+<style type="text/css">td {
+    font-size:1.0em;
+    padding: 5px 5px;
+}
+</style>

@@ -17,6 +17,13 @@ Next, we looked for all the Schedule 13G's and Schedule 13G/A's in the rejected_
     .output missing-cusips-13G.csv
     select * from rejected_items where document_name like '%13G%';
 
+We could have narrowed this group down further by eliminating documents that appear in both valid_items
+and rejected_items. We cannot be certain that the documents don't contain unique information, but if we already have
+ parsed a document with the same title, there's a good chance that rejected document contains nothing new.
+
+  select count(*) from rejected_items where document_name
+like '%13G%' and document_name not in (select document_name from valid_items),
+
 This yielded the missing-cusips-13G.csv file. This file contained 343 rows (one was a header):
 
   (myenv)USAU9900:edgar-pipeline reedn$ wc -l missing-cusips-13G.csv

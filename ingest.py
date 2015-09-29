@@ -42,6 +42,7 @@ def ingest(path, incremental=False):
            cusip VARCHAR NOT NULL,
            url VARCHAR NOT NULL,
            address VARCHAR,
+           search_company VARCHAR,
            issue_name VARCHAR,
            issuer_name VARCHAR,
            document_name VARCHAR,
@@ -52,10 +53,10 @@ def ingest(path, incremental=False):
         with open(os.path.join(path, "valid-items.csv"), "r") as valid_items_csv:
             reader = unicode_csv_reader(valid_items_csv)
             for row in reader:
-                stmt = '''INSERT INTO tmp_valid_items (cusip, url, address, issue_name, issuer_name, document_name, date, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
-                con.execute(stmt, (row['cusip'], row['url'], row['address'], row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['score'],))
+                stmt = '''INSERT INTO tmp_valid_items (cusip, url, address, search_company, issue_name, issuer_name, document_name, date, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+                con.execute(stmt, (row['cusip'], row['url'], row['address'], row.get('search_company'), row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['score'],))
 
-        stmt = "INSERT INTO valid_items(cusip, url, address, issue_name, issuer_name, document_name, date, score) SELECT cusip, url, address, issue_name, issuer_name, document_name, date, score FROM tmp_valid_items"
+        stmt = "INSERT INTO valid_items(cusip, url, address, search_company, issue_name, issuer_name, document_name, date, score) SELECT cusip, url, address, search_company, issue_name, issuer_name, document_name, date, score FROM tmp_valid_items"
         con.execute(stmt)
         con.execute("DROP TABLE tmp_valid_items")
 
@@ -66,6 +67,7 @@ def ingest(path, incremental=False):
            cusip VARCHAR NOT NULL,
            url VARCHAR NOT NULL,
            address VARCHAR,
+           search_company VARCHAR,
            issue_name VARCHAR,
            issuer_name VARCHAR,
            document_name VARCHAR,
@@ -76,10 +78,10 @@ def ingest(path, incremental=False):
         with open(os.path.join(path, "rejected-items.csv"), "r") as rejected_items_csv:
             reader = unicode_csv_reader(rejected_items_csv)
             for row in reader:
-                stmt = 'INSERT INTO tmp_rejected_items VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-                con.execute(stmt, (row['cusip'], row['url'], row['address'], row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['validation_reason']))
+                stmt = 'INSERT INTO tmp_rejected_items VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                con.execute(stmt, (row['cusip'], row['url'], row['address'], row.get('search_company'), row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['validation_reason']))
 
-        stmt = "INSERT INTO rejected_items(cusip, url, address, issue_name, issuer_name, document_name, date, validation_reason) SELECT cusip, url, address, issue_name, issuer_name, document_name, date, validation_reason FROM tmp_rejected_items"
+        stmt = "INSERT INTO rejected_items(cusip, url, address, search_company, issue_name, issuer_name, document_name, date, validation_reason) SELECT cusip, url, address, search_company, issue_name, issuer_name, document_name, date, validation_reason FROM tmp_rejected_items"
         con.execute(stmt)
         con.execute("DROP TABLE tmp_rejected_items")
 
@@ -88,6 +90,7 @@ def ingest(path, incremental=False):
            cusip VARCHAR NOT NULL,
            url VARCHAR NOT NULL,
            address VARCHAR,
+           search_company VARCHAR,
            issue_name VARCHAR,
            issuer_name VARCHAR,
            document_name VARCHAR,
@@ -95,13 +98,15 @@ def ingest(path, incremental=False):
            score NUMERIC NOT NULL)'''
         con.execute(stmt)
 
-        with open(os.path.join("duplicate-items.csv"), "r") as duplicate_items_csv:
+        with open(os.path.join(path, "duplicate-items.csv"), "r") as duplicate_items_csv:
             reader = unicode_csv_reader(duplicate_items_csv)
             for row in reader:
-                stmt = 'INSERT INTO tmp_duplicate_items VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-                con.execute(stmt, (row['cusip'], row['url'], row['address'], row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['score']))
+                print row
 
-        stmt = "INSERT INTO duplicate_items(cusip, url, address, issue_name, issuer_name, document_name, date, score) SELECT cusip, url, address, issue_name, issuer_name, document_name, date, score FROM tmp_duplicate_items"
+                stmt = 'INSERT INTO tmp_duplicate_items VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                con.execute(stmt, (row['cusip'], row['url'], row['address'], row.get('search_company'), row['issue_name'], row['issuer_name'], row['document_name'], row['date'], row['score']))
+
+        stmt = "INSERT INTO duplicate_items(cusip, url, address, search_company, issue_name, issuer_name, document_name, date, score) SELECT cusip, url, address, search_company, issue_name, issuer_name, document_name, date, score FROM tmp_duplicate_items"
         con.execute(stmt)
         con.execute("DROP TABLE tmp_duplicate_items")
 

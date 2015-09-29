@@ -61,16 +61,6 @@ def clean_item(item):
     if item.get('issuer_name'):
         item['issuer_name'] = clean_issuer_name(item['issuer_name'])
 
-    # Issue name
-    if not item.get('issue_name'):
-        item['issue_name'] = 'Notes' # For now, default to "Notes." Might want to make this more intelligent.
-
-    # Use cusip cardinality to determine issue name cardinality. For multi-valued lists of issue names,
-    # replace commas with semicolons, as this was probably a data-entry error. Exclude anything with the words "par"
-    # or "per share".
-    if len(cusips) > 1 and (not re.search(r'par', item['issue_name'], re.IGNORECASE)) and (not re.search(r'per share', item['issue_name'], re.IGNORECASE)):
-        item['issue_name'] = item['issue_name'].replace(',', ';')
-
 def clean_address(address):
     address = address.strip()
     address = re.sub(',+', ',', address)

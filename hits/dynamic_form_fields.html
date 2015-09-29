@@ -1,0 +1,98 @@
+<html>
+<!-- Bootstrap v3.0.3 -->
+<head>
+<style>
+    * {
+  .border-radius(0) !important;
+}
+
+#field {
+    margin-bottom:20px;
+}
+</style>
+<script src="jquery-1.11.3.min.js"></script>
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+
+</head>
+
+<script>$(document).ready(function() {
+    var max_fields      = 10; //maximum input boxes allowed
+    var cusip_fields_wrapper         = $(".cusip_fields_wrap"); //Fields wrapper
+    var issue_name_fields_wrapper    = $(".issue_name_fields_wrap"); //Fields wrapper
+    var add_cusip_field_button      = $(".add_cusip_field_button"); //Add button ID
+    var add_issue_name_field_button      = $(".add_issue_name_field_button"); //Add button ID
+
+    var increment_counter = function(name) {
+        if (name == 'cusip[]') {
+            cusip_count++;
+        } else {
+            issue_count++;
+        }
+    }
+
+    var select_wrapper = function(name) {
+        if (name == 'cusip[]') {
+            return cusip_fields_wrapper;
+        } else {
+            return issue_name_fields_wrapper;
+        }
+    }
+
+    var get_count = function(name) {
+        if (name == 'cusip[]') {
+            return cusip_count;
+        } else {
+            return issue_count;
+        }
+    }
+
+    var add_input_button_handler = function(name) {
+        return function(e) {
+            e.preventDefault();
+
+            if(get_count(name) < max_fields) { //max input box allowed
+                increment_counter(name);
+                wrapper = select_wrapper(name);
+                $(wrapper).append('<div><input type="text" name="' + name
+                    + '"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+            }
+        };
+    };
+
+    var issue_count = 1;
+    var cusip_count = 1;
+
+    $(add_cusip_field_button).click(add_input_button_handler("cusip[]"));
+    $(add_issue_name_field_button).click(add_input_button_handler("issue_name[]"));
+
+    $(cusip_fields_wrapper).on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); cusip_count--;
+    })
+
+    $(issue_name_fields_wrapper).on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); issue_count--;
+    })
+
+});
+</script>
+
+<form action="#submit">
+    <fieldset>
+        <legend>CUSIP</legend>
+        Please enter the CUSIP #'s below:
+        <div class="cusip_fields_wrap">
+            <button class="add_cusip_field_button">Add CUSIP #</button>
+            <div><input type="text" name="cusip[]"></div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Issue Name</legend>
+        Please enter the Issue Names below:
+        <div class="issue_name_fields_wrap">
+            <button class="add_issue_name_field_button">Add Issue Name</button>
+            <div><input type="text" name="issue_name[]"></div>
+        </div>
+    </fieldset>
+
+</form>
