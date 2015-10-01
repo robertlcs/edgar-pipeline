@@ -14,3 +14,12 @@ class TestCase(unittest.TestCase):
 
     def test_apc(self):
         self.assertTrue(is_parent_company("AIR PRODUCTS AND CHEMICALS INC", "AIR PRODUCTS CHEMICALS INC DE"))
+
+    def test_wells_fargo(self):
+        self.assertTrue(is_parent_company("WELLS FARGO COMPANY", "WELLS FARGO COMPANY MN"))
+
+    def test_is_parent_company_exact_match(self):
+        self.assertTrue(is_parent_company("ARCHER DANIELS MIDLAND", "ARCHER DANIELS MIDLAND"))
+
+    def test_adm_co(self):
+        self.assertTrue(is_parent_company("ARCHER DANIELS MIDLAND", "ARCHER DANIELS MIDLAND CO"))

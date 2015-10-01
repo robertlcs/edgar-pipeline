@@ -24,15 +24,31 @@ print query_template
 con = sqlite3.connect("ingest.db")
 cur = con.cursor()
 
+valid_common_stocks_count = 0
 for name in company_names:
+    #print name
     query = query_template % 'valid_items'
     cur.execute(query, ['%' + db_escape_name(escape_name(name)) + '%'])
+    #print "Looking for valid issue name: " + db_escape_name(escape_name(name))
     items = cur.fetchall()
 
-    if [is_parent_company(name, item[0]) for item in items].count(True) == 0:
+    has_common_stock = False
+
+    for item in items:
+        if is_parent_company(name, item[0]):
+            has_common_stock = True
+            break
+        else:
+            print "Comparing %s with %s" % (name, item[0])
+            print "NOT MATCH!!!"
+    if not has_common_stock:
         no_valid_common_stock_companies.append(name)
     else:
         companies_with_valid_or_rejected_issues.append(name)
+        valid_common_stocks_count += 1
+
+    if len(items) == 0:
+        print "NO VALID ITEMS FOR %s" % name
 
 print "# of companies with no valid common stock filings: %d" % len(no_valid_common_stock_companies)
 
@@ -40,13 +56,30 @@ print "# of companies with no valid common stock filings: %d" % len(no_valid_com
 missing_common_stock_companies = []
 count_not_found = 0
 for name in no_valid_common_stock_companies:
+    print name
     query = query_template % 'rejected_items'
+    #print "Looking for rejected issue name: " + db_escape_name(escape_name(name))
+
     cur.execute(query, ['%' + db_escape_name(escape_name(name)) + '%'])
     items = cur.fetchall()
-    if [is_parent_company(name, item[0]) for item in items].count(True) == 0:
+
+    has_common_stock = False
+
+    for item in items:
+        if is_parent_company(name, item[0]):
+            has_common_stock = True
+            break
+        else:
+            print "Comparing %s with %s: " % (name, item[0])
+            print "NOT MATCH!!!"
+
+    if not has_common_stock:
         missing_common_stock_companies.append(name)
     else:
         companies_with_valid_or_rejected_issues.append(name)
+
+    if len(items) == 0:
+        print "NO REJECTED ITEMS FOR %s" % name
 
 print "# of companies with no valid or rejected common stock filings: %d" % len(missing_common_stock_companies)
 print "Writing missing companies to missing-sp500-companies.csv..."
@@ -56,7 +89,8 @@ with open("missing-sp500-companies.csv", "w") as missing_out:
         missing_out.write(name + "\n")
         print name
 
-
+print "Number of companies in S&P 500 with common stocks: %d" % valid_common_stocks_count
+print "Percentage coverage: %d " % (100 * valid_common_stocks_count / len(company_names))
 
 
 
