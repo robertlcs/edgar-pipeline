@@ -21,25 +21,49 @@ select * from sp500_companies where company not in (select trim(issuer_name) fro
 
 Problems:
 
-AIR PRODUCTS:
-- Address not parsed (found in document)
-http://www.sec.gov/Archives/edgar/data/2969/000093247115005274/airproductschemicalsinc.htm
-
 AFFILIATED MANAGERS:
 - Address in document for EATON. Maybe some relationship between companies?
 processed-data/valid-items.csv:008252108,http://www.sec.gov/Archives/edgar/data/1076598/000094039413000025/affiliatedmanagers13g.txt,"600 HALE STREET, PRIDES CROSSING MA 01965",AFFILIATED MANAGERS GROUP INC,AFFILIATED MANAGERS GROUP INC COMMON STOCK,EATON VANCE MANAGEMENT,SC 13G for EATON VANCE MANAGEMENT,01/09/2013,41
 
-- No address found in valid item for AFFILIATED
+- No address found in any valid item for AFFILIATED MANAGERS
 - Credit Agreement incorrectly parsed as "common stock"
 http://www.sec.gov/Archives/edgar/data/1004434/000110465913035210/a13-10546_2ex10d1.htm
 
 AIR PRODUCTS CHEMICALS INC DE
-- Addressed not parsed from SC13 GA
+- Addressed not parsed from SC13 GA (found in document)
 http://www.sec.gov/Archives/edgar/data/2969/000093247115005274/airproductschemicalsinc.htm
 
 AT T INC
 - Too many matches to analyze because of ambiguous search term. Mostly unrelated companies.
 
+FACEBOOK
+- Search results show "SC 13G for Zuckerberg Mark" but the document shows an issuer name of Facebook, Inc.
+- If the issuer name had been extracted from the document itself, this would have counted.
+
+GOLDMAN SACHS
+- Address failed to parse
+http://www.sec.gov/Archives/edgar/data/886982/000151905815000133/gs.txt
+
+NIKE INC
+
+Two search results would have yielded CUSIP #'s for common stock:
+
+- Search results show "SC 13G/A for KNIGHT PHILIP H" but the filing is for Nike (issuer).
+http://www.sec.gov/Archives/edgar/data/903855/000032018712000018/f13gaknight.htm
+
+- CUSIP incorrectly parsed (grabbed wrong text):
+http://www.sec.gov/Archives/edgar/data/320187/000089742315000038/nikeinc13d063015.htm
+
+ZIONS BANCORP
+- Search results were unavailable during the crawl -- error undetermined. Could have been a site outage.
+- Confirmed with a later search that there were several pages search results.
+- Log messages:
+
+2015-11-30 18:17:18 [root] DEBUG: ------ parse_search_results_follow_next_page -----
+2015-11-30 18:17:18 [root] DEBUG: Page num: 1
+2015-11-30 18:17:18 [root] DEBUG: Search company: ZIONS BANCORP
+2015-11-30 18:17:18 [root] INFO: Parsing search results for ZIONS BANCORP, page 1
+2015-11-30 18:17:18 [root] INFO: 0 results
 
 
 

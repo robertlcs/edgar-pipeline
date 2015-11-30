@@ -9,8 +9,8 @@ def get_stem_of_company_name(name):
     name = name.replace("'", '') # Replace with no space
 
     words_to_remove = ['GROUP', 'INC', 'DE', 'CORP', 'CO', 'COMPANY', 'LTD', 'NV', 'LIMITED', 'PLC', 'SYSTEMS',
-                       'SYSTEM', 'RESOURCE', 'RESOURCES', 'PLC', 'INTERNATIONAL', 'MARKET', 'HOLDINGS', 'COMPANIES',
-                       'AND', 'DE', 'NY', 'MN', 'NV', 'N V'
+                       'SYSTEM', 'RESOURCE', 'RESOURCES', 'PLC', 'INTERNATIONAL', 'MARKET', 'INDUSTRIES', 'HOLDINGS', 'COMPANIES',
+                       'AND', 'DE', 'NY', 'MN', 'NV', 'N V', 'NJ', 'VA', 'MA', 'PA'
                        ]
     pats = [r'\b%s\b' % word for word in words_to_remove]
     for pat in pats:
