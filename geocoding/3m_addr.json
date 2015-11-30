@@ -1,0 +1,466 @@
+{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "3M Center Parking Lot 227",
+               "short_name" : "3M Center Parking Lot 227",
+               "types" : [ "point_of_interest", "establishment" ]
+            },
+            {
+               "long_name" : "14th Street",
+               "short_name" : "14th St",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Saint Paul",
+               "short_name" : "St Paul",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Ramsey County",
+               "short_name" : "Ramsey County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Minnesota",
+               "short_name" : "MN",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "55144",
+               "short_name" : "55144",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "3M Center Parking Lot 227, 14th St, St Paul, MN 55144, USA",
+         "geometry" : {
+            "location" : {
+               "lat" : 44.9524141,
+               "lng" : -92.9941206
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 44.95376308029149,
+                  "lng" : -92.99277161970849
+               },
+               "southwest" : {
+                  "lat" : 44.9510651197085,
+                  "lng" : -92.9954695802915
+               }
+            }
+         },
+         "partial_match" : true,
+         "place_id" : "ChIJHQs6PCPW94cRT_hKrsnm3ts",
+         "types" : [ "parking", "point_of_interest", "establishment" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "3",
+               "short_name" : "3",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "Center Drive",
+               "short_name" : "Center Dr",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Saint Paul",
+               "short_name" : "St Paul",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Ramsey County",
+               "short_name" : "Ramsey County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Minnesota",
+               "short_name" : "MN",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "55117",
+               "short_name" : "55117",
+               "types" : [ "postal_code" ]
+            },
+            {
+               "long_name" : "1048",
+               "short_name" : "1048",
+               "types" : [ "postal_code_suffix" ]
+            }
+         ],
+         "formatted_address" : "3 Center Dr, St Paul, MN 55117, USA",
+         "geometry" : {
+            "location" : {
+               "lat" : 45.0331026,
+               "lng" : -93.0939293
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 45.0344515802915,
+                  "lng" : -93.0925803197085
+               },
+               "southwest" : {
+                  "lat" : 45.0317536197085,
+                  "lng" : -93.09527828029151
+               }
+            }
+         },
+         "partial_match" : true,
+         "place_id" : "ChIJv7xcmeLVslIRs6UIoem5ans",
+         "types" : [ "street_address" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "3M Center Employee Parking lot",
+               "short_name" : "3M Center Employee Parking lot",
+               "types" : [ "point_of_interest", "establishment" ]
+            },
+            {
+               "long_name" : "2501",
+               "short_name" : "2501",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "Hudson Road",
+               "short_name" : "Hudson Rd",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Saint Paul",
+               "short_name" : "St Paul",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Ramsey County",
+               "short_name" : "Ramsey County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Minnesota",
+               "short_name" : "MN",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "55119",
+               "short_name" : "55119",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "3M Center Employee Parking lot, 2501 Hudson Rd, St Paul, MN 55119, USA",
+         "geometry" : {
+            "location" : {
+               "lat" : 44.95071420000001,
+               "lng" : -92.99224510000001
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 44.95206318029151,
+                  "lng" : -92.99089611970851
+               },
+               "southwest" : {
+                  "lat" : 44.94936521970851,
+                  "lng" : -92.99359408029152
+               }
+            }
+         },
+         "partial_match" : true,
+         "place_id" : "ChIJT0LMpiTW94cRCDlw6vtd0KE",
+         "types" : [ "parking", "point_of_interest", "establishment" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "3M Center",
+               "short_name" : "3M Center",
+               "types" : [ "point_of_interest", "establishment" ]
+            },
+            {
+               "long_name" : "900",
+               "short_name" : "900",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "Bush Avenue",
+               "short_name" : "Bush Ave",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Dayton's Bluff",
+               "short_name" : "Dayton's Bluff",
+               "types" : [ "neighborhood", "political" ]
+            },
+            {
+               "long_name" : "Saint Paul",
+               "short_name" : "St Paul",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Ramsey County",
+               "short_name" : "Ramsey County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Minnesota",
+               "short_name" : "MN",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "55106",
+               "short_name" : "55106",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "3M Center, 900 Bush Ave, St Paul, MN 55106, USA",
+         "geometry" : {
+            "location" : {
+               "lat" : 44.964417,
+               "lng" : -93.06226699999999
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 44.9657659802915,
+                  "lng" : -93.0609180197085
+               },
+               "southwest" : {
+                  "lat" : 44.9630680197085,
+                  "lng" : -93.0636159802915
+               }
+            }
+         },
+         "partial_match" : true,
+         "place_id" : "ChIJ_zCdRCnVslIR02lbnDLPhwg",
+         "types" : [ "point_of_interest", "establishment" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "3M Center - Building 223",
+               "short_name" : "3M Center - Building 223",
+               "types" : [ "premise" ]
+            },
+            {
+               "long_name" : "12th Street",
+               "short_name" : "12th St",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Saint Paul",
+               "short_name" : "St Paul",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Ramsey County",
+               "short_name" : "Ramsey County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Minnesota",
+               "short_name" : "MN",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "55119",
+               "short_name" : "55119",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "3M Center - Building 223, 12th St, St Paul, MN 55119, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 44.9529535,
+                  "lng" : -92.99373729999999
+               },
+               "southwest" : {
+                  "lat" : 44.9502858,
+                  "lng" : -92.99661589999999
+               }
+            },
+            "location" : {
+               "lat" : 44.9516196,
+               "lng" : -92.99517659999999
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 44.9529686302915,
+                  "lng" : -92.99373729999999
+               },
+               "southwest" : {
+                  "lat" : 44.9502706697085,
+                  "lng" : -92.99661589999999
+               }
+            }
+         },
+         "partial_match" : true,
+         "place_id" : "ChIJTVPj1CLW94cR38wpyZM-yW4",
+         "types" : [ "premise" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "3M Center - Building 235",
+               "short_name" : "3M Center - Building 235",
+               "types" : [ "premise" ]
+            },
+            {
+               "long_name" : "Saint Paul",
+               "short_name" : "St Paul",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Ramsey County",
+               "short_name" : "Ramsey County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Minnesota",
+               "short_name" : "MN",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "55119",
+               "short_name" : "55119",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "3M Center - Building 235, St Paul, MN 55119, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 44.955442,
+                  "lng" : -92.98880009999999
+               },
+               "southwest" : {
+                  "lat" : 44.9545592,
+                  "lng" : -92.9912599
+               }
+            },
+            "location" : {
+               "lat" : 44.9548602,
+               "lng" : -92.9897445
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 44.9563495802915,
+                  "lng" : -92.98868101970849
+               },
+               "southwest" : {
+                  "lat" : 44.9536516197085,
+                  "lng" : -92.9913789802915
+               }
+            }
+         },
+         "partial_match" : true,
+         "place_id" : "ChIJB9AptSXW94cRp_SpgI92r6A",
+         "types" : [ "premise" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "3M Center - Building 207",
+               "short_name" : "3M Center - Building 207",
+               "types" : [ "premise" ]
+            },
+            {
+               "long_name" : "Saint Paul",
+               "short_name" : "St Paul",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Ramsey County",
+               "short_name" : "Ramsey County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Minnesota",
+               "short_name" : "MN",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "55119",
+               "short_name" : "55119",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "3M Center - Building 207, St Paul, MN 55119, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 44.9538695,
+                  "lng" : -93.0031461
+               },
+               "southwest" : {
+                  "lat" : 44.95236999999999,
+                  "lng" : -93.0042588
+               }
+            },
+            "location" : {
+               "lat" : 44.9534677,
+               "lng" : -93.0039685
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 44.9544687302915,
+                  "lng" : -93.0023534697085
+               },
+               "southwest" : {
+                  "lat" : 44.9517707697085,
+                  "lng" : -93.0050514302915
+               }
+            }
+         },
+         "partial_match" : true,
+         "place_id" : "ChIJn4rANxrW94cRxaYYjSW8Keg",
+         "types" : [ "premise" ]
+      }
+   ],
+   "status" : "OK"
+}
+
