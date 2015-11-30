@@ -17,7 +17,7 @@ def get_stem_of_company_name(name):
         name = re.sub(pat, '', name, re.IGNORECASE)
     name = re.sub('\s+', ' ', name).strip()
 
-    print "Stem: %s " % name
+    #print "Stem: %s " % name
     return name
 
 def get_db_name_pattern(name):

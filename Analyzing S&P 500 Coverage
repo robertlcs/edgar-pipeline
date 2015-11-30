@@ -25,6 +25,22 @@ AIR PRODUCTS:
 - Address not parsed (found in document)
 http://www.sec.gov/Archives/edgar/data/2969/000093247115005274/airproductschemicalsinc.htm
 
+AFFILIATED MANAGERS:
+- Address in document for EATON. Maybe some relationship between companies?
+processed-data/valid-items.csv:008252108,http://www.sec.gov/Archives/edgar/data/1076598/000094039413000025/affiliatedmanagers13g.txt,"600 HALE STREET, PRIDES CROSSING MA 01965",AFFILIATED MANAGERS GROUP INC,AFFILIATED MANAGERS GROUP INC COMMON STOCK,EATON VANCE MANAGEMENT,SC 13G for EATON VANCE MANAGEMENT,01/09/2013,41
+
+- No address found in valid item for AFFILIATED
+- Credit Agreement incorrectly parsed as "common stock"
+http://www.sec.gov/Archives/edgar/data/1004434/000110465913035210/a13-10546_2ex10d1.htm
+
+AIR PRODUCTS CHEMICALS INC DE
+- Addressed not parsed from SC13 GA
+http://www.sec.gov/Archives/edgar/data/2969/000093247115005274/airproductschemicalsinc.htm
+
+AT T INC
+- Too many matches to analyze because of ambiguous search term. Mostly unrelated companies.
+
+
 
 
 
