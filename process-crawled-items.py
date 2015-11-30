@@ -8,7 +8,6 @@ import os
 
 from cleaning import clean_item
 from validation import validate_item
-from ingest import ingest
 
 def gen_clean_items(items):
     for item in items:
@@ -34,7 +33,19 @@ def gen_rows_from_items_with_multiple_cusips(items):
             continue
 
         cusip_numbers = item['cusip'].split(';')
-        issue_names = item['issue_name'].split(';')
+        issue_names = [''] * len(cusip_numbers)
+
+        print "Cusip numbers: " + str(cusip_numbers)
+        # Fill in issue_names with values from the list of issue names
+        if item['issue_name']:
+            tokens = item['issue_name'].split(';')
+            print "Issue names: " + str(tokens)
+
+            for i, token in enumerate(tokens):
+                if i > len(issue_names) - 1:
+                    break
+                issue_names[i] = token
+
         for i, cusip_number in enumerate(cusip_numbers):
             new_item = item.copy()
             new_item['cusip'] = cusip_number.strip()
@@ -51,10 +62,6 @@ def gen_scored_items(items):
         item['score'] = (1 if item.get('address') else 0) * (len(item.get('address')) if item.get('address') else 0 + len(item['issue_name']))
         yield item
 
-# It would be really nice to rewrite this as a generator or series of generators, but it would require further thought.
-# Or, another approach would be to load the generated items into a database and use the database to filter out
-# the rejected, duplicate and valid items.
-# For now, just iterate over the items and separate into categories (validated, duplicate, rejected).
 def process_generated_items(items):
     print "Processing items..."
     duplicate_items = []
@@ -92,12 +99,20 @@ def process_generated_items(items):
 parser = argparse.ArgumentParser(description='Process crawled items.')
 parser.add_argument("path", help="Path to crawl output")
 args = parser.parse_args()
+batch_name = os.path.splitext(args.path)[0]
+
+try:
+    print "Removing processed-data..."
+    os.unlink("processed-data")
+except:
+    print "No processed-data. It must be your first time running this script."
 
 # Steps: Clean, validate, expand rows, score, de-dupe
 
 print "Opening " + args.path
 f = open(args.path, "r")
 
+# Load items, using appropriate method for format (json-lines or csv)
 if re.match(".*\.jl$", args.path):
     items = (json.loads(line) for line in f)
 elif re.match(".*\.csv$", args.path):
@@ -116,7 +131,7 @@ processed_items = process_generated_items(scored_items)
 fields = ['cusip', 'url', 'address', 'search_company', 'issue_name', 'issuer_name', 'document_name', 'date']
 
 # Create processed directory for staging processed files
-dirname = os.path.splitext(args.path)[0] + "-processed"
+dirname = batch_name + "-processed"
 if not os.path.exists(dirname):
     os.mkdir(dirname)
 
