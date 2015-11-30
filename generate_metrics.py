@@ -1,92 +1,119 @@
-from decimal import Decimal
 import csv
+from decimal import Decimal
+import sys
 import sqlite3 as lite
-import os
+from name_resolution import get_db_name_pattern
+from company_queries import get_companies
 
-sp500_count = 502
+TWOPLACES = Decimal(10) ** -2
 
-def pretty_print_row(row):
-    for key in row.keys():
-        print "%s: %s" % (key, row[key])
+def find_possible_issuers(con, log_file, company):
+    cur = con.cursor()
+    pat = get_db_name_pattern(company)
+    query = "select issuer_name from master_issuers where issuer_name like '%s'" % pat
+    log_query(query, log_file)
+
+    cur.execute("select issuer_name from master_issuers where issuer_name like ?", [pat])
+    results = cur.fetchall()
+    return [row[0] for row in results]
+
+def fetch_count(con, query, bindings=None):
+    cur = con.cursor()
+    if bindings:
+        cur.execute(query, bindings)
+    else:
+        cur.execute(query)
+    row = cur.fetchone()
+    return row[0]
+
+def log_query(query, f):
+    f.write(query + "\n")
 
 con = lite.connect('ingest.db')
-
 with con:
+
+    print "Valid, duplicate and rejected counts"
+    print "------------------------------------"
+    valid_items_count = fetch_count(con, "select count(*) from valid_items")
+    rejected_items_count = fetch_count(con, "select count(*) from rejected_items")
+    duplicate_items_count = fetch_count(con, "select count(*) from duplicate_items")
+
+    print "# valid: " + str(valid_items_count)
+    print "# rejected: " + str(rejected_items_count)
+    print "# duplicate: " + str(duplicate_items_count)
+    print "TOTAL # CRAWLED: " + str(valid_items_count + duplicate_items_count + rejected_items_count)
+
+    # extract issuers (cusip6's) from valid_items
+    crawled_issuers_count = fetch_count(con, "select count(distinct substr(cusip, 1, 6)) from valid_items")
+    print "# distinct valid issuers (CUSIP6's): " + str(crawled_issuers_count)
+
     cur = con.cursor()
-    cur.execute('select count(*) from sp500_companies where company not in (select distinct issuer_name from valid_items);')
-    missing_count = cur.fetchone()[0]
+    cur.execute("select validation_reason, count(validation_reason) from rejected_items group by validation_reason")
+    rejection_counts = {}
+    for row in cur.fetchall():
+        rejection_counts[row[0]] = row[1]
 
-    cur.execute("select count(*) from valid_items where issuer_name in (select company from sp500_companies)")
-    num_issues_for_sp500_companies = cur.fetchone()[0]
+    for reason in rejection_counts.keys():
+        print "# rejected for '%s': %d" % (reason, rejection_counts[reason])
 
-    cur.execute("select count(*) from valid_items where upper(issue_name) like '%COMMON%'")
-    num_common_stocks = cur.fetchone()[0]
+    # compare count against master file
+    companies = get_companies(con)
+    master_issuers_count = 0
+    companies_coverage = {}
 
-    cur.execute("select count(*) from valid_items where upper(issue_name) like '%COMMON%' and issuer_name in (select company from sp500_companies)")
-    num_common_stocks_for_sp500_companies = cur.fetchone()[0]
+    print "Generating master issuer coverage stats..."
+    query_log_file = open("queries.txt", "w")
 
-    TWOPLACES = Decimal(10) ** -2
-    percent_sp500_with_common_stocks = Decimal(num_common_stocks_for_sp500_companies) / Decimal(sp500_count)
-    percent_sp500_with_common_stocks = percent_sp500_with_common_stocks.quantize(TWOPLACES)
+    missing_companies = []
+    with query_log_file:
+        for company in companies:
 
-    cur.execute("select count(distinct(issuer_name)) from valid_items")
-    issuer_count = cur.fetchone()[0]
+            possible_issuers = find_possible_issuers(con, query_log_file, company)
+            master_issuers_count += len(possible_issuers)
 
-    cur.execute("select count(distinct(cusip)) from valid_items")
-    cusip_count = cur.fetchone()[0]
+            crawled_issuers_for_company_count = fetch_count(con,
+                                                            '''select count(distinct substr(cusip, 1, 6))
+                                                            from valid_items
+                                                            where issuer_name like ?''',
+                                                            [get_db_name_pattern(company)])
+            company_master_issuers_count = len(possible_issuers)
 
-    cur.execute("select count(*) from valid_items")
-    valid_count = cur.fetchone()[0]
+            if company_master_issuers_count > 0:
+                percentage_issuers_crawled_for_company = Decimal(100) * Decimal(crawled_issuers_for_company_count) / Decimal(company_master_issuers_count)
+                percentage_issuers_crawled_for_company = percentage_issuers_crawled_for_company.quantize(TWOPLACES)
+            else:
+                percentage_issuers_crawled_for_company = "NaN"
+                missing_companies.append(company)
 
-    cur.execute('select count(*) from rejected_items')
-    rejected_count = cur.fetchone()[0]
+            companies_coverage[company] = {'CRAWLED_ISSUERS_COUNT' : crawled_issuers_for_company_count,
+                                           'MASTER_ISSUERS_COUNT' : company_master_issuers_count,
+                                           'COVERAGE (%)' : percentage_issuers_crawled_for_company}
 
-    cur.execute('select count(*) from duplicate_items')
-    duplicate_count = cur.fetchone()[0]
+            #print "%s: %d of %d issuer numbers crawled. Coverage: %s"  % (company,
+            #                                                              crawled_issuers_for_company_count,
+            #                                                              company_master_issuers_count,
+            #                                                              percentage_issuers_crawled_for_company)
 
-    total_count = rejected_count + valid_count + duplicate_count
-    percent_accepted = Decimal(Decimal(valid_count) / Decimal(total_count)).quantize(TWOPLACES)
+print "Stats generated, writing..."
 
-fields = ['Search Size', 'Total Num Documents', 'Num Common Stocks for Search Set', 'Percent (%) Coverage of Common Stocks', 'Total Num Common Stocks', 'Total Num Issuers', 'Total Num CUSIP', 'Num Rejected', 'Num Duplicates', 'Percent (%) Accepted']
-with open("metrics.csv", "w") as output_csv:
-    writer = csv.DictWriter(output_csv, fields)
+fields = ['COMPANY', 'CRAWLED_ISSUERS_COUNT', 'MASTER_ISSUERS_COUNT', 'COVERAGE (%)']
+with open('coverage_metrics.csv', 'w') as coverage_metrics_csv:
+    writer = csv.DictWriter(coverage_metrics_csv, fields)
     writer.writeheader()
-    row = {
-        'Search Size' : sp500_count,
-        'Total Num Documents' : total_count,
-        'Num Common Stocks for Search Set' : num_common_stocks_for_sp500_companies,
-        'Percent (%) Coverage of Common Stocks' : percent_sp500_with_common_stocks,
-        'Total Num Common Stocks' : num_common_stocks,
-        'Total Num Issuers' : issuer_count,
-        'Total Num CUSIP' : cusip_count,
-        'Num Rejected' : rejected_count,
-        'Num Duplicates' : duplicate_count,
-        'Percent (%) Accepted' : percent_accepted }
+    for company in companies:
+        row = companies_coverage[company]
+        row['COMPANY'] = company
+        writer.writerow(row)
 
-    print "----- Crawl results -----"
-    print "# items crawled: %s" % total_count
-    print "# items valid: %s" % valid_count
-    print "# items rejected: %s" % rejected_count
-    print "# items duplicates: %s" % duplicate_count
-    print "Percentage accepted (valid): %s" % percent_accepted
-    print
+print "Wrote to coverage_metrics.csv"
 
-    print "------------ Stocks and Bonds ------------"
-    print "Number of common stocks: %s" % num_common_stocks
-    print "Number of issues (CUSIP's): %s" % cusip_count
-    print
+fields = ['COMPANY', 'ISSUER']
+with open("missing_issuers.csv", "w") as missing_issuers_csv:
+    writer = csv.DictWriter(missing_issuers_csv, fields)
+    writer.writeheader()
+    for company in missing_companies:
+        row = {}
+        row['COMPANY'] = company
+        writer.writerow(row)
 
-    print "---------- S&P 500 Index -----------"
-    print "# of common stocks for SP500: %s" % num_common_stocks_for_sp500_companies
-    print "# of companies in index: %s" % sp500_count
-    print "Percentage of S&P 500 common stocks found/accepted: %s" % percent_sp500_with_common_stocks
-
-    writer.writerow(row)
-
-
-
-
-
-
-
-
+print "Missing issuers are found in missing_issuers.csv"

@@ -1,4 +1,4 @@
-from name_utils import is_parent_company, escape_name
+from name_resolution import is_parent_company, escape_name
 
 import csv
 import sqlite3

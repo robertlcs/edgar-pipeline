@@ -54,3 +54,5 @@ DROP TABLE IF EXISTS sp500_companies;
 create table sp500_companies (
     company VARCHAR NOT NULL
 );
+
+CREATE INDEX valid_issuer_index ON valid_items (issuer_name);

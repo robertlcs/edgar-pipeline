@@ -1,6 +1,6 @@
 import unittest
 
-from name_utils import is_parent_company
+from name_resolution import is_parent_company
 
 class TestCase(unittest.TestCase):
     def test_is_parent_company(self):

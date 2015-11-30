@@ -2,7 +2,7 @@ import argparse
 import csv
 import sqlite3
 import sys
-from name_utils import is_parent_company
+from name_resolution import is_parent_company
 
 parser = argparse.ArgumentParser(description='Find similar issuer names.')
 parser.add_argument("-e",

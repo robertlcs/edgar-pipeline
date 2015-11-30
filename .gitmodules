@@ -1,0 +1,6 @@
+[submodule "cusiputils"]
+	path = cusiputils
+	url = https://github.com/PartnerInnovationCenter/cusiputils
+[submodule "dnbdirect"]
+	path = dnbdirect
+	url = https://github.com/PartnerInnovationCenter/dnbdirect

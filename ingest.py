@@ -128,7 +128,8 @@ if __name__ == "__main__":
                     action="store_true",
                     help="this is an incremental ingest, so don't drop/create the database.")
     parser.add_argument("path",
-                        help="path to processed files (directory)")
+                        help="path to processed files (directory)",
+                        default="processed-data")
     args = parser.parse_args()
 
     ingest(args.path, args.incremental)

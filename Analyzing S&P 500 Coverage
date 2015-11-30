@@ -1,0 +1,29 @@
+# Generate cusip6 issuers
+python extract_cusip6_from_valid_items.py
+
+# Find distinct issuers, using issuer name similarity with search_term to identify relevant issuers who have addresses.
+# Throw out unrelated companies that are missing addresses
+querycsv.py -i issuer_cusip6 -o distinct_issuers.csv "select distinct issuer_name, search_term, address from issuer_cusip6 where issuer_name like search_term || '%' and address not like ''"
+
+# Find the companies in S&P500 without issues
+sqlite> .mode csv
+sqlite> .output missing-issuers.csv
+sqlite> select count(*) from sp500_companies where company not in (select trim(issuer_name) from distinct_issuers);
+156
+
+# Write out missing issuers
+.mode csv
+.output missing-sp500-issuers
+select * from sp500_companies where company not in (select trim(issuer_name) from distinct_issuers);
+
+
+-----------
+
+Problems:
+
+AIR PRODUCTS:
+- Address not parsed (found in document)
+http://www.sec.gov/Archives/edgar/data/2969/000093247115005274/airproductschemicalsinc.htm
+
+
+
