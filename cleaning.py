@@ -1,4 +1,5 @@
 import re
+from name_resolution import get_stem_of_company_name
 
 def clean_issuer_name(issue_name):
     m = re.match(r'"(.*)"', issue_name)
@@ -28,10 +29,14 @@ def clean_issuer_name(issue_name):
     cleaned_issuer_name = cleaned_issuer_name.replace('-', ' ')
     cleaned_issuer_name = cleaned_issuer_name.replace('&', ' ')
     cleaned_issuer_name = cleaned_issuer_name.replace('.', ' ')
+    cleaned_issuer_name = cleaned_issuer_name.replace('!', ' ')
 
     cleaned_issuer_name = re.sub('\s+', ' ', cleaned_issuer_name).strip()
     return cleaned_issuer_name
 
+# Like clean, but removes any modifiers, suffixes, etc., to get the root company name
+def strip_issuer_name(issuer_name):
+    return get_stem_of_company_name(issuer_name)
 
 def clean_cusips(item):
     cleaned_cusips = []
