@@ -10,7 +10,7 @@ def get_stem_of_company_name(name):
 
     words_to_remove = ['GROUP', 'INC', 'DE', 'CORP', 'CO', 'COMPANY', 'LTD', 'NV', 'LIMITED', 'PLC', 'SYSTEMS',
                        'SYSTEM', 'RESOURCE', 'RESOURCES', 'PLC', 'INTERNATIONAL', 'MARKET', 'INDUSTRIES', 'HOLDINGS', 'COMPANIES',
-                       'AND', 'DE', 'NY', 'MN', 'NV', 'N V', 'NJ', 'VA', 'MA', 'PA'
+                       'AND', 'DE', 'NY', 'MN', 'NV', 'N V', 'NJ', 'VA', 'MA', 'PA', 'MO'
                        ]
     pats = [r'\b%s\b' % word for word in words_to_remove]
     for pat in pats:

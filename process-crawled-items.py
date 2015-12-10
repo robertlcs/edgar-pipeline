@@ -128,7 +128,7 @@ expanded_items = gen_rows_from_items_with_multiple_cusips(validated_items)
 scored_items = gen_scored_items(expanded_items)
 processed_items = process_generated_items(scored_items)
 
-fields = ['cusip', 'url', 'address', 'search_term', 'issue_name', 'issuer_name', 'document_name', 'date']
+fields = ['cusip', 'url', 'address', 'search_term', 'issue_name', 'filing_person', 'issuer_name', 'document_name', 'document_type', 'date']
 
 # Create processed directory for staging processed files
 dirname = batch_name + "-processed"
