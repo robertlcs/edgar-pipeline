@@ -5,13 +5,13 @@ def get_companies(con):
     results = cur.fetchall()
     return [row[0] for row in results]
 
-def find_address(con, issuer_name):
+def find_address(con, filing_person):
     cur = con.cursor()
-    query = "select address from valid_items where issuer_name = ? order by address desc limit 1"
+    query = "select address from valid_items where filing_person = ? order by address desc limit 1"
     print query
-    print issuer_name
+    print filing_person
 
-    cur.execute("select address from valid_items where issuer_name = ? order by address desc limit 1", [issuer_name])
+    cur.execute("select address from valid_items where filing_person = ? order by address desc limit 1", [filing_person])
     results = cur.fetchone()
     return results[0]
 

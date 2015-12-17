@@ -4,10 +4,12 @@ CREATE TABLE valid_items (
     cusip VARCHAR NOT NULL,
     url VARCHAR NOT NULL,
     address VARCHAR,
-    search_company VARCHAR,
+    search_term VARCHAR,
     issue_name VARCHAR,
+    filing_person VARCHAR,
     issuer_name VARCHAR,
     document_name VARCHAR,
+    document_type VARCHAR,
     date DATE,
     score NUMERIC NOT NULL DEFAULT 0
 );
@@ -18,10 +20,12 @@ CREATE TABLE rejected_items (
     cusip VARCHAR NOT NULL,
     url VARCHAR NOT NULL,
     address VARCHAR,
-    search_company VARCHAR,
+    search_term VARCHAR,
     issue_name VARCHAR,
+    filing_person VARCHAR,
     issuer_name VARCHAR,
     document_name VARCHAR,
+    document_type VARCHAR,
     date DATE,
     validation_reason VARCHAR
 );
@@ -32,10 +36,12 @@ CREATE TABLE duplicate_items (
     cusip VARCHAR NOT NULL,
     url VARCHAR NOT NULL,
     address VARCHAR,
-    search_company VARCHAR,
+    search_term VARCHAR,
     issue_name VARCHAR,
+    filing_person VARCHAR,
     issuer_name VARCHAR,
     document_name VARCHAR,
+    document_type VARCHAR,
     date DATE,
     score NUMERIC NOT NULL DEFAULT 0
 );

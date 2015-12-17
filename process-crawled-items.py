@@ -52,6 +52,31 @@ def gen_rows_from_items_with_multiple_cusips(items):
             new_item['issue_name'] = issue_names[i].strip()
             yield new_item
 
+def score_item_relevance(item):
+    score = 0
+    from cleaning import strip_issuer_name
+
+    if item.get('issuer_name'):
+        if item['issuer_name'].lower() == item['filing_person'].lower():
+            score += 100
+        elif strip_issuer_name(item['issuer_name']).lower() == strip_issuer_name(item['filing_person']).lower():
+            score += 50
+
+        if item['issuer_name'].lower == item['search_term'].lower():
+            score += 100
+        elif strip_issuer_name(item['issuer_name']).lower() == strip_issuer_name(item['search_term']).lower():
+            score += 50
+        return score
+
+    if item['search_term'].lower() == item['filing_person'].lower():
+        score += 70
+    elif strip_issuer_name(item['search_term']).lower() == strip_issuer_name(item['filing_person']).lower():
+        score += 50
+    return score
+
+def score_item_address(item):
+    return (1 if item.get('address') else 0) * (len(item.get('address')) if item.get('address') else 0)
+
 def gen_scored_items(items):
     for item in items:
         if not item['is_valid']:
@@ -59,16 +84,23 @@ def gen_scored_items(items):
             yield item
             continue
 
-        item['score'] = (1 if item.get('address') else 0) * (len(item.get('address')) if item.get('address') else 0 + len(item['issue_name']))
+        item['score'] = score_item_address(item) + score_item_relevance(item) + len(item['issue_name'])
+
         yield item
+
+def filing_key(item):
+    return ':'.join([item['cusip'],
+                     item['issuer_name'] if item.get('issuer_name') else '',
+                     item['filing_person'],
+                     item['issue_name']])
 
 def process_generated_items(items):
     print "Processing items..."
     duplicate_items = []
     rejected_items = []
 
-    # Keep track of cusip's we've seen before
-    cusip_to_items = dict()
+    # Keep track of filings we've seen before
+    filings = dict()
     item_count = 0
     for item in items:
         item_count += 1
@@ -76,18 +108,18 @@ def process_generated_items(items):
         if not item['is_valid']:
             rejected_items.append(item)
             continue
-        seen_item = cusip_to_items.get(item['cusip'])
+        seen_item = filings.get(filing_key(item))
 
         if not seen_item:
-            cusip_to_items[item['cusip']] = item
+            filings[filing_key(item)] = item
         elif item['score'] > seen_item['score']:
-            cusip_to_items[item['cusip']] = item
+            filings[filing_key(item)] = item
             duplicate_items.append(seen_item)
         else:
             duplicate_items.append(item)
 
     print "Processed %d items." % item_count
-    validated_items = cusip_to_items.values()
+    validated_items = filings.values()
     print "%d duplicate items" % len(duplicate_items)
     print "%d rejected items" % len(rejected_items)
     print "%d validated items" % len(validated_items)
