@@ -92,7 +92,9 @@ def filing_key(item):
     return ':'.join([item['cusip'],
                      item['issuer_name'] if item.get('issuer_name') else '',
                      item['filing_person'],
-                     item['issue_name']])
+                     item['issue_name'],
+                     item['date'],
+                     item['url']])
 
 def process_generated_items(items):
     print "Processing items..."

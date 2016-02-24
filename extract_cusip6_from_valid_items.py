@@ -18,6 +18,7 @@ with con:
         for issuer in issuers:
             #print "ISSUER: " + issuer
             filing_person = issuer[IssuerQueries.FILING_PERSON_INDEX]
+            # TBD use issuer_name if it's available, as that takes precedence over the filing person
             print "---FILING PERSON: %s" % filing_person
             address = find_address(con, filing_person)
 
